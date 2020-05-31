@@ -148,7 +148,7 @@ class _SignUpUserNameViewState extends State<SignUpUserNameView> {
                           // 跳转到输入密码页面
                           await Navigator.of(context).push(
                             AppRoute(
-                              SignUpPassword(userName,
+                              SignUpPasswordView(userName,
                                   avatar: avatar, displayName: _usernameController.text),
                             ),
                           );

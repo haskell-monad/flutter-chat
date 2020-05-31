@@ -39,6 +39,10 @@ dependencies:
   bot_toast: ^3.0.0
   get_it: ^4.0.1
   shared_preferences: ^0.5.4+1
+  #
+  url_launcher: ^5.4.1
+  url_launcher_web: ^0.1.0
+  webview_flutter: ^0.3.19+9
 
   # 國際化
   intl: ^0.16.0

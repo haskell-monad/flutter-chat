@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutterchat/core/common/matrix_client.dart';
 import 'package:flutterchat/core/common/matrix_enum.dart';
+import 'package:flutterchat/core/common/matrix_exception.dart';
 
 import '../../../locator.dart';
 import '../localstorage_service.dart';
@@ -10,7 +11,9 @@ import '../localstorage_service.dart';
 import 'package:http/http.dart' as http;
 
 class MatrixApi {
-//  StreamController<User> userController = StreamController<User>();
+
+
+  StreamController<LoginState> loginController = StreamController<LoginState>();
 
   int _timeoutFactor = 1;
 
@@ -91,23 +94,15 @@ class MatrixApi {
     if (response.containsKey('access_token') &&
         response.containsKey('device_id') &&
         response.containsKey('user_id')) {
-//      await connect(
-//          newToken: response['access_token'],
-//          newUserID: response['user_id'],
-//          newHomeServer: storageService.user.homeServer,
-//          newDeviceName: initialDeviceDisplayName ?? '',
-//          newDeviceID: response['device_id']);
+      await connect(
+          newToken: response['access_token'],
+          newUserID: response['user_id'],
+          newHomeServer: storageService.user.homeServer,
+          newDeviceName: initialDeviceDisplayName ?? '',
+          newDeviceID: response['device_id']);
       // TODO
-      var matrixClient = storageService.user;
-      if (matrixClient == null) {
-        matrixClient = MatrixClient("iron-chat-client");
-      }
-      matrixClient.userId = response['user_id'];
-      matrixClient.accessToken = response['access_token'];
-      matrixClient.deviceId = response['device_id'];
-      storageService.user = matrixClient;
       print(
-          "[Register-Success: user_id: ${matrixClient.userId},  access_token: ${matrixClient.accessToken}");
+          "[Register-Success: user_id: ${response['user_id']},  access_token: ${response['access_token']}");
     }
     return response;
   }
@@ -142,23 +137,15 @@ class MatrixApi {
         loginResp.containsKey('access_token') &&
         loginResp.containsKey('device_id')) {
       // TODO
-//      await connect(
-//        newToken: loginResp['access_token'],
-//        newUserID: loginResp['user_id'],
-//        newHomeServer: storageService.user.homeServer,
-//        newDeviceName: initialDeviceDisplayName ?? '',
-//        newDeviceID: loginResp['device_id'],
-//      );
-      // 保存用戶信息
-      var matrixClient = storageService.user;
-      if (matrixClient == null) {
-        matrixClient = MatrixClient("iron-chat-client");
-      }
-      matrixClient.userId = loginResp['user_id'];
-      matrixClient.accessToken = loginResp['access_token'];
-      storageService.user = matrixClient;
+      await connect(
+        newToken: loginResp['access_token'],
+        newUserID: loginResp['user_id'],
+        newHomeServer: storageService.user.homeServer,
+        newDeviceName: initialDeviceDisplayName ?? '',
+        newDeviceID: loginResp['device_id'],
+      );
       print(
-          "[Login-Success: user_id: ${matrixClient.userId},  access_token: ${matrixClient.accessToken}");
+          "[Login-Success: user_id: ${loginResp['userId']},  access_token: ${loginResp['accessToken']}");
       return true;
     }
     return false;
@@ -192,6 +179,161 @@ class MatrixApi {
 //        data: {'avatar_url': uploadResp});
 //    return;
 //  }
+
+  void connect({
+    String newToken,
+    String newHomeServer,
+    String newUserID,
+    String newDeviceName,
+    String newDeviceID,
+    String newPrevBatch,
+    String newOlmAccount,
+  }) async {
+//    String olmAccount;
+//    if (database != null) {
+//      final account = await database.getClient(clientName);
+//      if (account != null) {
+//        _id = account.clientId;
+//        _homeserver = account.homeserverUrl;
+//        _accessToken = account.token;
+//        _userID = account.userId;
+//        _deviceID = account.deviceId;
+//        _deviceName = account.deviceName;
+//        prevBatch = account.prevBatch;
+//        olmAccount = account.olmAccount;
+//      }
+//    }
+//    _accessToken = newToken ?? _accessToken;
+//    _homeserver = newHomeserver ?? _homeserver;
+//    _userID = newUserID ?? _userID;
+//    _deviceID = newDeviceID ?? _deviceID;
+//    _deviceName = newDeviceName ?? _deviceName;
+//    prevBatch = newPrevBatch ?? prevBatch;
+//    olmAccount = newOlmAccount ?? olmAccount;
+
+    if (newToken == null || newHomeServer == null || newUserID == null) {
+      // we aren't logged in
+      loginController.add(LoginState.loggedOut);
+      return;
+    }
+
+    // Try to create a new olm account or restore a previous one.
+//    if (olmAccount == null) {
+//      try {
+//        await olm.init();
+//        _olmAccount = olm.Account();
+//        _olmAccount.create();
+//        if (await _uploadKeys(uploadDeviceKeys: true) == false) {
+//          throw ('Upload key failed');
+//        }
+//      } catch (_) {
+//        _olmAccount = null;
+//      }
+//    } else {
+//      try {
+//        await olm.init();
+//        _olmAccount = olm.Account();
+//        _olmAccount.unpickle(userID, olmAccount);
+//      } catch (_) {
+//        _olmAccount = null;
+//      }
+//    }
+
+//    if (database != null) {
+//      if (id != null) {
+//        await database.updateClient(
+//          _homeserver,
+//          _accessToken,
+//          _userID,
+//          _deviceID,
+//          _deviceName,
+//          prevBatch,
+//          pickledOlmAccount,
+//          id,
+//        );
+//      } else {
+//        _id = await database.insertClient(
+//          clientName,
+//          _homeserver,
+//          _accessToken,
+//          _userID,
+//          _deviceID,
+//          _deviceName,
+//          prevBatch,
+//          pickledOlmAccount,
+//        );
+//      }
+//      _userDeviceKeys = await database.getUserDeviceKeys(id);
+//      _olmSessions = await database.getOlmSessions(id, _userID);
+//      _rooms = await database.getRoomList(this, onlyLeft: false);
+//      _sortRooms();
+//      accountData = await database.getAccountData(id);
+//      presences = await database.getPresences(id);
+//    }
+
+//    _userEventSub ??= onUserEvent.stream.listen(handleUserUpdate);
+
+    // 保存用戶信息 TODO
+    var matrixClient = storageService.user;
+    if (matrixClient == null) {
+      matrixClient = MatrixClient("iron-chat-client");
+    }
+    matrixClient.userId = newUserID;
+    matrixClient.accessToken = newToken;
+    matrixClient.deviceId = newDeviceID;
+    matrixClient.deviceName = newDeviceName;
+    matrixClient.homeServer = newHomeServer;
+    storageService.user = matrixClient;
+
+    loginController.add(LoginState.logged);
+
+    return _sync();
+  }
+
+  Future<void> _sync() async {
+//    if (isLogged() == false || _disposed) return;
+//
+//    var action = '/client/r0/sync?filter=$syncFilters';
+//
+//    if (prevBatch != null) {
+//      action += '&timeout=30000';
+//      action += '&since=${prevBatch}';
+//    }
+//    try {
+//      _syncRequest = jsonRequest(type: HTTP.GET, action: action);
+//      if (_disposed) return;
+//      final hash = _syncRequest.hashCode;
+//      final syncResp = await _syncRequest;
+//      if (hash != _syncRequest.hashCode) return;
+//      _timeoutFactor = 1;
+//      if (database != null) {
+//        await database.transaction(() async {
+//          await handleSync(syncResp);
+//          if (prevBatch != syncResp['next_batch']) {
+//            await database.storePrevBatch(syncResp['next_batch'], id);
+//          }
+//        });
+//      } else {
+//        await handleSync(syncResp);
+//      }
+//      if (_disposed) return;
+//      if (prevBatch == null) {
+//        onFirstSync.add(true);
+//        prevBatch = syncResp['next_batch'];
+//        _sortRooms();
+//      }
+//      prevBatch = syncResp['next_batch'];
+//      await _updateUserDeviceKeys();
+//      _cleanupKeyVerificationRequests();
+//      if (hash == _syncRequest.hashCode) unawaited(_sync());
+//    } on MatrixException catch (exception) {
+//      onError.add(exception);
+//      await Future.delayed(Duration(seconds: syncErrorTimeoutSec), _sync);
+//    } catch (exception) {
+//      print('Error during processing events: ' + exception.toString());
+//      await Future.delayed(Duration(seconds: syncErrorTimeoutSec), _sync);
+//    }
+  }
 
   Future<Map<String, dynamic>> jsonRequest(
       {HTTP type,
@@ -265,18 +407,18 @@ class MatrixApi {
       }
       jsonResp = jsonDecode(String.fromCharCodes(resp.body.runes))
           as Map<String, dynamic>; // May throw FormatException
-
+      print("status code: "+ resp.statusCode.toString());
       if (resp.statusCode >= 400 && resp.statusCode < 500) {
         // The server has responsed with an matrix related error.
-//        var exception = MatrixException(resp);
-//        if (exception.error == MatrixException.M_UNKNOWN_TOKEN) {
-//          // The token is no longer valid. Need to sign off....
-//          // TODO: add a way to export keys prior logout?
+        var exception = MatrixException(resp);
+        if (exception.error == MatrixError.M_UNKNOWN_TOKEN) {
+          // The token is no longer valid. Need to sign off....
+          // TODO: add a way to export keys prior logout?
 //          onError.add(exception);
+          /// 重置所有设置并停止同步 TODO
 //          clear();
-//        }
-
-        throw resp;
+        }
+        throw exception;
       }
 
       if (matrixClient.debug) print('[RESPONSE] ${jsonResp.toString()}');
@@ -293,4 +435,5 @@ class MatrixApi {
 
     return jsonResp;
   }
+
 }

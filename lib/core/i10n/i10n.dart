@@ -92,4 +92,7 @@ class L10n {
   String get areYouSure => Intl.message("Are you sure?");
   String get loadingPleaseWait => Intl.message("Loading... Please wait");
 
+  String get authentication => Intl.message("Authentication");
+
+
 }

@@ -15,7 +15,6 @@ class SignUpUserNameViewModel extends BaseViewModel {
 
   /// 註冊
   Future<bool> signUpUserName(BuildContext context, String username) async {
-//    var matrix = Matrix.of(context);
     // 较验用户输入的用户名
     if (username.isEmpty) {
       usernameError = L10n.of(context).pleaseChooseAUsername;

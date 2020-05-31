@@ -28,7 +28,7 @@ Future<void> main() async {
 
 class App extends StatelessWidget {
 
-//  var storageService = locator<LocalStorageService>();
+  final storageService = locator<LocalStorageService>();
 
 
   @override
@@ -51,7 +51,7 @@ class App extends StatelessWidget {
           locale: kIsWeb
               ? Locale(html.window.navigator.language.split('-').first)
               : null,
-          home: Index()
+          home: storageService.user.accessToken == null ? IndexView() : ChatListView()
       ),
     );
   }

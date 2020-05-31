@@ -4,6 +4,17 @@ import 'package:flutterchat/core/common/matrix_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
+
+  /// 用戶
+  static const String UserKey = 'user';
+
+  /// 語言
+  static const String AppLanguagesKey = 'languages';
+
+  /// 主題
+  static const String DarkModeKey = 'darkMode';
+
+
   static LocalStorageService _instance;
   static SharedPreferences _preferences;
   static Future<LocalStorageService> getInstance() async {
@@ -15,15 +26,6 @@ class LocalStorageService {
     }
     return _instance;
   }
-
-  /// 用戶
-  static const String UserKey = 'user';
-
-  /// 語言
-  static const String AppLanguagesKey = 'languages';
-
-  /// 主題
-  static const String DarkModeKey = 'darkMode';
 
   MatrixClient get user {
     var userJson = _getFromDisk(UserKey);

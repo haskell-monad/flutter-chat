@@ -14,7 +14,7 @@ import 'package:flutterchat/ui/views/base_view.dart';
 import 'package:flutterchat/ui/views/chat/chat_list.dart';
 
 /// 註冊-密碼頁
-class SignUpPassword extends StatefulWidget {
+class SignUpPasswordView extends StatefulWidget {
   /// 頭像
   final File avatar;
 
@@ -24,13 +24,13 @@ class SignUpPassword extends StatefulWidget {
   /// 顯示名
   final String displayName;
 
-  SignUpPassword(this.userName, {this.avatar, this.displayName});
+  SignUpPasswordView(this.userName, {this.avatar, this.displayName});
 
   @override
-  _SignUpPasswordState createState() => _SignUpPasswordState();
+  _SignUpPasswordViewState createState() => _SignUpPasswordViewState();
 }
 
-class _SignUpPasswordState extends State<SignUpPassword> {
+class _SignUpPasswordViewState extends State<SignUpPasswordView> {
   /// 是否顯示密碼
   bool showPassword = true;
 
@@ -68,14 +68,16 @@ class _SignUpPasswordState extends State<SignUpPassword> {
                       //是否自动更正
                       autocorrect: false,
                       //内容提交(按回车)的回调
-                      onSubmitted: (t) async {
-                        var n = await model.signUpAndLoginAction(context, widget.displayName, widget.userName, _passwordController.text, widget.avatar);
-                        if (n) {
-                          // 進入到聊天列表頁面
-                          await Navigator.of(context).pushAndRemoveUntil(
-                                AppRoute.defaultRoute(context, ChatListView()), (r) => false);
-                        }
-                      },
+                      onSubmitted: (t) => model.state == ViewState.Busy ?
+                            null : model.signUpAndLoginAction(context, widget.displayName, widget.userName, _passwordController.text, widget.avatar),
+//                      async {
+//                        var n = await model.signUpAndLoginAction(context, widget.displayName, widget.userName, _passwordController.text, widget.avatar);
+//                        if (n) {
+//                          // 進入到聊天列表頁面
+//                          await Navigator.of(context).pushAndRemoveUntil(
+//                                AppRoute.defaultRoute(context, ChatListView()), (r) => false);
+//                        }
+//                      },
                       decoration: InputDecoration(
                           // placeholder
                           hintText: '****',
@@ -113,17 +115,19 @@ class _SignUpPasswordState extends State<SignUpPassword> {
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 16),
                               ),
-                        onPressed: () async {
-                          if (model.state == ViewState.Busy) {
-                            return null;
-                          }
-                          var n = await model.signUpAndLoginAction(context, widget.displayName, widget.userName, _passwordController.text, widget.avatar);
-                          if(n){
-                            // 進入到聊天列表頁面
-                            await Navigator.of(context).pushAndRemoveUntil(
-                              AppRoute.defaultRoute(context, ChatListView()), (r) => false);
-                          }
-                        },
+                        onPressed: () => model.state == ViewState.Busy ?
+                                  null : model.signUpAndLoginAction(context, widget.displayName, widget.userName, _passwordController.text, widget.avatar)
+//                        async {
+//                          if (model.state == ViewState.Busy) {
+//                            return null;
+//                          }
+//                          await model.signUpAndLoginAction(context, widget.displayName, widget.userName, _passwordController.text, widget.avatar);
+//                          if(n){
+//                            // 進入到聊天列表頁面
+//                            await Navigator.of(context).pushAndRemoveUntil(
+//                              AppRoute.defaultRoute(context, ChatListView()), (r) => false);
+//                          }
+
                       ),
                     ),
                   ),

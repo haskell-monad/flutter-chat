@@ -15,7 +15,7 @@ import '../../locator.dart';
 import 'matrix.dart';
 
 //
-class Index extends StatelessWidget {
+class IndexView extends StatelessWidget {
 
   static const String defaultHomeServer = 'im.indiedeveloper.club';
 

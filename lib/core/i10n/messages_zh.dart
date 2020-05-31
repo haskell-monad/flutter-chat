@@ -57,6 +57,8 @@ class MessageLookup extends MessageLookupByLibrary {
     MessageLookupByLibrary.simpleMessage("你确定吗?"),
     "Loading... Please wait":
     MessageLookupByLibrary.simpleMessage("加载中...请稍候"),
+    "Authentication":
+    MessageLookupByLibrary.simpleMessage("安全验证"),
         "DefaultConnectedHomeServer": m3,
       };
 }
